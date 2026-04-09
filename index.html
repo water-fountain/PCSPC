@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DREVIATION TACTICS | M-A SEASON</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card: #161616;
+            --poke-red: #ff3333;
+            --poke-orange: #ff8800;
+            --text-light: #f0f0f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-light);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container { width: 100%; max-width: 500px; }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--poke-red);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+        }
+
+        .calc-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #222;
+            margin-bottom: 20px;
+        }
+
+        .input-group { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            font-size: 0.75em;
+            color: var(--poke-red);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .mega-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #111;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--poke-orange);
+            margin-bottom: 20px;
+        }
+
+        #megaToggle { width: 20px; height: 20px; accent-color: var(--poke-orange); }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        #calcBtn { background: var(--poke-red); color: white; }
+        #resetBtn { background: #222; color: #888; }
+
+        .progress-container {
+            background: #000;
+            height: 12px;
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        #sp-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--poke-red), var(--poke-orange));
+            transition: width 0.4s ease-out;
+        }
+
+        .build-item {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            border-left: 4px solid var(--poke-red);
+        }
+
+        .remove-btn { background: #222; color: #888; padding: 4px 10px; border: 1px solid #333; cursor: pointer; }
+
+        .result-card {
+            background: #000;
+            border: 1px solid var(--poke-orange);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .error-card {
+            border: 1px solid var(--poke-red);
+            color: var(--poke-red);
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .nature-header {
+            padding: 12px;
+            background: #000;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--poke-orange);
+        }
+    </style>
+  <script type="module" crossorigin src="/PCSPC/assets/index-BycxwYAD.js"></script>
+  <link rel="modulepreload" crossorigin href="/PCSPC/assets/chunk-J5LGTIGS-B2JUSbT6.js">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 style="margin:0; letter-spacing:2px;">Poke Champions SP Calculator</h2>
+            <p style="color:var(--poke-orange); margin:8px 0 0 0; font-weight:bold; font-size:0.9em;">M-A Regulation LIVE</p>
+        </div>
+
+        <div class="calc-card">
+            <div class="input-group">
+                <label>Pokémon Name</label>
+                <input type="text" id="pokeName" list="pokeList" placeholder="Search Species...">
+                <datalist id="pokeList"></datalist>
+            </div>
+            <div class="mega-container">
+                <input type="checkbox" id="megaToggle">
+                <label for="megaToggle" style="color:var(--poke-orange); margin:0;">Mega Stone</label>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="input-group">
+                    <label>Stat Target</label>
+                    <select id="statKey">
+                        <option value="hp">HP</option>
+                        <option value="atk">Attack</option>
+                        <option value="def">Defense</option>
+                        <option value="spa">Sp. Atk</option>
+                        <option value="spd">Sp. Def</option>
+                        <option value="spe">Speed</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Alignment</label>
+                    <select id="alignment">
+                        <option value="1.0">Neutral</option>
+                        <option value="1.1">Positive (+)</option>
+                        <option value="0.9">Negative (-)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Target Value</label>
+                <input type="number" id="targetVal" placeholder="Set Goal">
+            </div>
+            <button id="calcBtn">ANALYZE STATS</button>
+            <button id="resetBtn">PURGE ALL</button>
+            <div id="result"></div>
+        </div>
+
+        <h3 style="font-size: 0.75em; color: var(--poke-red); text-transform: uppercase; margin-bottom:5px;">
+            Budget: <span id="used-sp" style="color: white;">0</span>/66 SP
+        </h3>
+        <div class="progress-container">
+            <div id="sp-bar"></div>
+        </div>
+        <ul id="build-list" style="list-style: none; padding: 0;"></ul>
+    </div>
+</body>
+</html>
