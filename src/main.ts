@@ -62,7 +62,6 @@ function updateMegaVisibility() {
     if (!nameInput || !megaSubOptions) return;
     const species = gen9.species.get(nameInput.value);
     
-    // Check if X and Y exist for this specific species
     const hasX = gen9.species.get(`${species.name}-Mega-X`).exists;
     const hasY = gen9.species.get(`${species.name}-Mega-Y`).exists;
 
@@ -77,7 +76,6 @@ function updateMegaVisibility() {
 
 nameInput?.addEventListener('input', updateMegaVisibility);
 
-// MUTUAL EXCLUSION LOGIC
 megaXToggle?.addEventListener('change', () => {
     if (megaXToggle.checked && megaYToggle) megaYToggle.checked = false;
 });
@@ -109,26 +107,17 @@ if (btn && resultDiv && buildList && spBar && usedSpText) {
 
         let species = gen9.species.get(name);
         
-        // --- UPDATED MULTI-MEGA PROTOCOL ---
         if (megaToggle?.checked) {
             const baseName = species.name;
             let targetMegaName = `${baseName}-Mega`;
 
-            // If X/Y is visible, check if they are toggled
             if (megaSubOptions?.classList.contains('visible')) {
-                if (megaXToggle?.checked) {
-                    targetMegaName = `${baseName}-Mega-X`;
-                } else if (megaYToggle?.checked) {
-                    targetMegaName = `${baseName}-Mega-Y`;
-                }
+                if (megaXToggle?.checked) targetMegaName = `${baseName}-Mega-X`;
+                else if (megaYToggle?.checked) targetMegaName = `${baseName}-Mega-Y`;
             }
 
             let megaSpecies = gen9.species.get(targetMegaName);
-
-            // FALLBACK: If specific X/Y check fails or isn't toggled, use standard Mega
-            if (!megaSpecies.exists) {
-                megaSpecies = gen9.species.get(`${baseName}-Mega`);
-            }
+            if (!megaSpecies.exists) megaSpecies = gen9.species.get(`${baseName}-Mega`);
             
             if (!megaSpecies.exists) {
                 resultDiv.innerHTML = `<div class="error-card">⚠️ ${baseName} does not have a Mega Evolution.</div>`;
@@ -140,7 +129,6 @@ if (btn && resultDiv && buildList && spBar && usedSpText) {
         const baseStatValue = (species.baseStats as any)[stat];
         if (!species.exists || typeof baseStatValue !== 'number') return;
 
-        // Constraint Checks
         const hasPositive = buildStats.some(s => s.natureVal === 1.1);
         const hasNegative = buildStats.some(s => s.natureVal === 0.9);
 
@@ -163,7 +151,6 @@ if (btn && resultDiv && buildList && spBar && usedSpText) {
         const defaultStat = calculateChampionStat(baseStatValue, 0, alignment);
         const maxPossible = calculateChampionStat(baseStatValue, currentLimit, alignment);
 
-        // Adjust for Max Threshold
         if (!isNaN(rawInput) && rawInput > maxPossible) {
             target = maxPossible;
             targetInput.value = maxPossible.toString();
@@ -317,3 +304,75 @@ if (resetBtn) {
         if (targetWarning) targetWarning.style.display = "none";
     });
 }
+
+// --- 4. Final Showdown Export Logic (Template Literal Fix for Line Breaks) ---
+function copyForShowdown() {
+    const copyBtn = document.querySelector('#copyShowdownBtn') as HTMLButtonElement | null;
+    if (!nameInput || buildStats.length === 0) {
+        alert("Please select a Pokémon and add stats to your build first!");
+        return;
+    }
+
+    let speciesName = nameInput.value.trim();
+    let heldItem = "No Item";
+
+    // Handle Mega Evolution Naming and Items
+    if (megaToggle?.checked) {
+        const baseName = speciesName;
+        if (megaSubOptions?.classList.contains('visible')) {
+            if (megaXToggle?.checked) {
+                speciesName = `${baseName}-Mega-X`;
+                heldItem = `Charizardite X`;
+            } else if (megaYToggle?.checked) {
+                speciesName = `${baseName}-Mega-Y`;
+                heldItem = `Charizardite Y`;
+            }
+        } else {
+            speciesName = `${baseName}-Mega`;
+            heldItem = `${baseName}ite`;
+        }
+    }
+
+    const natureName = getNatureName(buildStats);
+    let finalNature = natureName;
+    if (natureName.includes("Neutral") || natureName.includes("Pending") || natureName.includes("Start")) {
+        finalNature = "Serious";
+    }
+
+    const evMap: Record<string, number> = {};
+    const showdownStatNames: Record<string, string> = {
+        'HP': 'HP', 'ATK': 'Atk', 'DEF': 'Def', 
+        'SPA': 'SpA', 'SPD': 'SpD', 'SPE': 'Spe'
+    };
+
+    buildStats.forEach(item => {
+        const key = showdownStatNames[item.stat];
+        evMap[key] = Math.min(item.amount * 8, 252);
+    });
+
+    const evParts = Object.entries(evMap)
+        .filter(([_, value]) => value > 0)
+        .map(([name, value]) => `${value} ${name}`);
+    
+    const evString = evParts.length > 0 ? evParts.join(' / ') : "0 HP";
+
+    // Using a multi-line Template Literal captures actual line breaks for the clipboard
+    const exportString = `${speciesName} @ ${heldItem}
+Ability: None
+EVs: ${evString}
+${finalNature} Nature`;
+
+    navigator.clipboard.writeText(exportString).then(() => {
+        if (copyBtn) {
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = "COPIED!";
+            copyBtn.style.background = "#08ce29";
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+                copyBtn.style.background = ""; 
+            }, 2000);
+        }
+    });
+}
+
+document.querySelector('#copyShowdownBtn')?.addEventListener('click', copyForShowdown);
