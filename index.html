@@ -3,165 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DREVIATION TACTICS | M-A SEASON</title>
+    <title>RealShinyHQ SP Calculator</title>
     <style>
         :root {
-            --bg: #0a0a0a;
-            --card: #161616;
-            --poke-red: #ff3333;
-            --poke-orange: #ff8800;
-            --text-light: #f0f0f0;
+            --bg: #0d1117;           
+            --card: #161b22;         
+            /* MASTER BALL PURPLE */
+            --poke-red: #6c5ce7;     
+            --poke-orange: #f39c12;  
+            --text-light: #f0f6fc;
+            --border: #30363d;
+            --input-bg: #010409;
+            --accent-blue: #58a6ff;
+            --poke-white: #ffffff; 
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text-light);
             margin: 0;
             display: flex;
             justify-content: center;
             padding: 20px;
+            line-height: 1.5;
         }
 
         .container { width: 100%; max-width: 500px; }
 
         .header {
             text-align: center;
-            border-bottom: 2px solid var(--poke-red);
+            border-bottom: 1px solid var(--border);
             margin-bottom: 25px;
-            padding-bottom: 15px;
+            padding-bottom: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+            letter-spacing: 3px;
+            font-weight: 800;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--poke-red), var(--poke-white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .calc-card {
             background: var(--card);
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #222;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             margin-bottom: 20px;
         }
 
-        .input-group { margin-bottom: 18px; }
+        .input-group { margin-bottom: 20px; }
 
         label {
             display: block;
-            font-size: 0.75em;
-            color: var(--poke-red);
-            margin-bottom: 6px;
+            font-size: 0.7rem;
+            color: #8b949e;
+            margin-bottom: 8px;
             text-transform: uppercase;
+            letter-spacing: 1.5px;
             font-weight: bold;
         }
 
         input, select {
             width: 100%;
-            padding: 12px;
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 6px;
+            padding: 12px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             color: white;
             box-sizing: border-box;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
 
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--poke-red);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+        }
+
+        /* --- Mega Evolution Panel (White Accent) --- */
         .mega-container {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .mega-container:has(#megaToggle:checked) {
+            border-color: var(--text-light);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .mega-main-row {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: #111;
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid var(--poke-orange);
-            margin-bottom: 20px;
         }
 
-        #megaToggle { width: 20px; height: 20px; accent-color: var(--poke-orange); }
+        .mega-sub-options {
+            display: none; 
+            gap: 24px;
+            margin-left: 30px;
+            padding-top: 12px;
+            margin-top: 12px;
+            border-top: 1px solid var(--border);
+        }
 
+        .mega-sub-options.visible { display: flex; }
+
+        .mega-sub-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--text-light);
+            text-transform: none;
+            font-size: 0.9rem;
+        }
+
+        #megaToggle, #megaX, #megaY { 
+            width: 18px; 
+            height: 18px; 
+            accent-color: var(--text-light); 
+            cursor: pointer;
+        }
+
+        /* --- Buttons --- */
         button {
             width: 100%;
             padding: 14px;
             border: none;
-            border-radius: 6px;
-            font-weight: bold;
+            border-radius: 8px;
+            font-weight: 800;
             cursor: pointer;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            transition: transform 0.1s active, opacity 0.2s;
         }
 
-        #calcBtn { background: var(--poke-red); color: white; }
-        #resetBtn { background: #222; color: #888; }
+        #calcBtn { 
+            background: linear-gradient(135deg, var(--poke-red), #4834d4); 
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
 
+        #calcBtn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        #resetBtn { 
+            background: transparent; 
+            color: #8b949e; 
+            border: 1px solid var(--border);
+        }
+
+        #resetBtn:hover { background: rgba(255,255,255,0.05); color: white; }
+
+        /* --- Progress & Stats --- */
         .progress-container {
-            background: #000;
-            height: 12px;
-            border-radius: 6px;
+            background: var(--input-bg);
+            height: 10px;
+            border-radius: 10px;
             margin: 20px 0;
             overflow: hidden;
-            border: 1px solid #222;
+            border: 1px solid var(--border);
         }
 
         #sp-bar {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, var(--poke-red), var(--poke-orange));
-            transition: width 0.4s ease-out;
+            background: linear-gradient(90deg, var(--poke-red), var(--poke-white));
+            box-shadow: 0 0 12px rgba(108, 92, 231, 0.4);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .build-item {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 8px;
+            background: var(--card);
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
             border-left: 4px solid var(--poke-red);
-        }
-
-        .remove-btn { background: #222; color: #888; padding: 4px 10px; border: 1px solid #333; cursor: pointer; }
-
-        .result-card {
-            background: #000;
-            border: 1px solid var(--poke-orange);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .error-card {
-            border: 1px solid var(--poke-red);
-            color: var(--poke-red);
-            padding: 12px;
-            margin-top: 15px;
+            animation: slideIn 0.3s ease-out;
         }
 
         .nature-header {
-            padding: 12px;
-            background: #000;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--poke-orange);
+            padding: 15px;
+            background: rgba(88, 166, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(88, 166, 255, 0.2);
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        /* Clean White text for logs */
+        #baseline-log, #optimization-log, #targetWarning {
+            color: var(--text-light);
+            font-family: monospace;
+            opacity: 0.9;
+        }
+
+        /* --- ADD TO BUILD (Interjected Styling) --- */
+        #addBtn {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            margin-top: 15px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        #addBtn:hover {
+            background: var(--input-bg);
+            border-color: var(--text-light);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
-  <script type="module" src="./assets/index-DBy6K_qf.js"></script>
-  <link rel="modulepreload" crossorigin href="/PCSPC/assets/chunk-J5LGTIGS-B2JUSbT6.js">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h2 style="margin:0; letter-spacing:2px;">Poke Champions SP Calculator</h2>
-            <p style="color:var(--poke-orange); margin:8px 0 0 0; font-weight:bold; font-size:0.9em;">M-A Regulation LIVE</p>
+            <h2>REALSHINY HQ</h2>
+            <p style="color:var(--text-light); opacity: 0.8; margin:5px 0 0 0; font-weight:800; font-size:0.75rem; letter-spacing: 2px; text-transform: uppercase;">SP Optimization Calculator | M-A REG</p>
         </div>
 
         <div class="calc-card">
             <div class="input-group">
-                <label>Pokémon Name</label>
+                <label>Target Species</label>
                 <input type="text" id="pokeName" list="pokeList" placeholder="Search Species...">
                 <datalist id="pokeList"></datalist>
             </div>
+
             <div class="mega-container">
-                <input type="checkbox" id="megaToggle">
-                <label for="megaToggle" style="color:var(--poke-orange); margin:0;">Mega Stone</label>
+                <div class="mega-main-row">
+                    <input type="checkbox" id="megaToggle">
+                    <label for="megaToggle" style="color:var(--text-light); margin:0; cursor:pointer;">Activate Mega Evolution</label>
+                </div>
+                <div class="mega-sub-options">
+                    <label><input type="checkbox" id="megaX"> Form X</label>
+                    <label><input type="checkbox" id="megaY"> Form Y</label>
+                </div>
             </div>
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div class="input-group">
-                    <label>Stat Target</label>
+                    <label>Parameter</label>
                     <select id="statKey">
                         <option value="hp">HP</option>
                         <option value="atk">Attack</option>
@@ -180,22 +280,34 @@
                     </select>
                 </div>
             </div>
+            
             <div class="input-group">
-                <label>Target Value</label>
-                <input type="number" id="targetVal" placeholder="Set Goal">
+                <label>Threshold Goal</label>
+                <input type="number" id="targetVal" placeholder="Input Value">
             </div>
+
             <button id="calcBtn">ANALYZE STATS</button>
-            <button id="resetBtn">PURGE ALL</button>
+            <button id="resetBtn">PURGE ALL DATA</button>
+            
+            <div id="targetWarning" style="display:none; font-size:0.75rem; margin-bottom:12px; font-weight:bold; text-align:center;"></div>
             <div id="result"></div>
         </div>
 
-        <h3 style="font-size: 0.75em; color: var(--poke-red); text-transform: uppercase; margin-bottom:5px;">
-            Budget: <span id="used-sp" style="color: white;">0</span>/66 SP
-        </h3>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <h3 style="font-size: 0.7rem; color: #8b949e; text-transform: uppercase; margin: 0; letter-spacing: 1px;">
+                Wallet Status
+            </h3>
+            <span style="font-size: 0.85rem; font-weight: bold; color: white;">
+                <span id="used-sp">0</span> <span style="color:#8b949e">/ 66 SP</span>
+            </span>
+        </div>
+        
         <div class="progress-container">
             <div id="sp-bar"></div>
         </div>
+
         <ul id="build-list" style="list-style: none; padding: 0;"></ul>
     </div>
+    <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
