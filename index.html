@@ -87,6 +87,7 @@
             box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
         }
 
+        /* --- Mega Evolution Panel (White Accent) --- */
         .mega-container {
             background: rgba(0, 0, 0, 0.2);
             padding: 16px;
@@ -135,6 +136,7 @@
             cursor: pointer;
         }
 
+        /* --- Buttons --- */
         button {
             width: 100%;
             padding: 14px;
@@ -164,6 +166,7 @@
 
         #resetBtn:hover { background: rgba(255,255,255,0.05); color: white; }
 
+        /* --- Progress & Stats --- */
         .progress-container {
             background: var(--input-bg);
             height: 10px;
@@ -173,7 +176,7 @@
             border: 1px solid var(--border);
         }
 
-        #spBar {
+        #sp-bar {
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, var(--poke-red), var(--poke-white));
@@ -201,6 +204,28 @@
             margin-bottom: 20px;
             border: 1px solid rgba(88, 166, 255, 0.2);
             border-left: 4px solid var(--accent-blue);
+        }
+
+        /* Clean White text for logs */
+        #baseline-log, #optimization-log, #targetWarning {
+            color: var(--text-light);
+            font-family: monospace;
+            opacity: 0.9;
+        }
+
+        /* --- ADD TO BUILD (Interjected Styling) --- */
+        #addBtn {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            margin-top: 15px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        #addBtn:hover {
+            background: var(--input-bg);
+            border-color: var(--text-light);
         }
 
         @keyframes slideIn {
@@ -264,7 +289,7 @@
             <button id="calcBtn">ANALYZE STATS</button>
             <button id="resetBtn">PURGE ALL DATA</button>
             
-            <div id="targetWarning" style="display:none; font-size:0.75rem; margin-bottom:12px; font-weight:bold; text-align:center; color: var(--text-light);"></div>
+            <div id="targetWarning" style="display:none; font-size:0.75rem; margin-bottom:12px; font-weight:bold; text-align:center;"></div>
             <div id="result"></div>
         </div>
 
@@ -273,42 +298,16 @@
                 Wallet Status
             </h3>
             <span style="font-size: 0.85rem; font-weight: bold; color: white;">
-                <span id="usedSp">0</span> <span style="color:#8b949e">/ 66 SP</span>
+                <span id="used-sp">0</span> <span style="color:#8b949e">/ 66 SP</span>
             </span>
         </div>
         
         <div class="progress-container">
-            <div id="spBar"></div>
+            <div id="sp-bar"></div>
         </div>
 
         <ul id="build-list" style="list-style: none; padding: 0;"></ul>
     </div>
-
-    <script type="module">
-        import { analyzeStats, purgeAllData, populateSpeciesList } from '/src/main.ts';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("RealShiny HQ System Online");
-
-            // Connect search/dropdown logic
-            populateSpeciesList();
-
-            // Connect button logic
-            document.getElementById('calcBtn')?.addEventListener('click', analyzeStats);
-            document.getElementById('resetBtn')?.addEventListener('click', purgeAllData);
-
-            // Handle Mega UI transitions
-            const megaToggle = document.getElementById('megaToggle');
-            const megaSub = document.querySelector('.mega-sub-options');
-            
-            megaToggle?.addEventListener('change', () => {
-                if (megaToggle.checked) {
-                    megaSub?.classList.add('visible');
-                } else {
-                    megaSub?.classList.remove('visible');
-                }
-            });
-        });
-    </script>
+    <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

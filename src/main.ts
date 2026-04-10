@@ -287,10 +287,10 @@ function updateBuildUI() {
             li.innerHTML = `
                 <div style="display: flex; align-items: baseline; gap: 8px;">
                     <span style="font-weight: bold;">${item.stat}${natureHTML}</span>
-                    <span style="font-size: 0.75em; color: #888;">(${item.baseValue} + <span style="color: #08ce29;">${item.addedValue}</span>)</span>
+                    <span style="font-size: 0.75em; color: #888;">(${item.baseValue} + <span style="color: #ff3333;">${item.addedValue}</span>)</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-weight: bold; color: #921ee0;">${item.amount} SP</span>
+                    <span style="font-weight: bold; color: #9900ff;">${item.amount} SP</span>
                     <button class="remove-btn" data-index="${index}">×</button>
                 </div>`;
             buildList.appendChild(li);
